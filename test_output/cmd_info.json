@@ -1,0 +1,8 @@
+{
+    "salmon_version": "1.10.3",
+    "index": "test_index",
+    "libType": "A",
+    "unmatedReads": "test_reads.fq",
+    "output": "test_output",
+    "auxDir": "aux_info"
+}

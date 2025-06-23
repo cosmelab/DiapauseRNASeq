@@ -1,0 +1,39 @@
+services:
+  rnaseq-analysis:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: diapause-rnaseq
+    volumes:
+      # Mount your local project directory to /proj in container
+      - ./:/proj
+      # Mount a separate volume for large data files (optional)
+      - rnaseq-data:/proj/data/raw
+      # Mount for SRA cache
+      - sra-cache:/proj/data/sra
+    ports:
+      # Jupyter notebook port
+      - "8888:8888"
+      # RStudio server port (if needed later)
+      - "8787:8787"
+    environment:
+      - DEBIAN_FRONTEND=noninteractive
+      - TZ=UTC
+    working_dir: /proj
+    # Keep container running
+    tty: true
+    stdin_open: true
+    # Increase shared memory for large datasets
+    shm_size: 2gb
+    # Optional: set resource limits for development
+    deploy:
+      resources:
+        limits:
+          memory: 8G
+          cpus: '4'
+
+volumes:
+  rnaseq-data:
+    driver: local
+  sra-cache:
+    driver: local

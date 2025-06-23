@@ -1,0 +1,81 @@
+Repository Check Results - Mon Jun 23 14:14:35 PDT 2025
+=================================
+
+Java packages in base image:
+---------------------------
+❌ openjdk packages (apt) - NOT FOUND
+❌ default-jdk (apt) - NOT FOUND
+
+Available Java packages:
+
+System packages in base image:
+-----------------------------
+❌ bcftools (apt) - NOT FOUND
+❌ samtools (apt) - NOT FOUND
+❌ bedtools (apt) - NOT FOUND
+❌ tabix (apt) - NOT FOUND
+❌ vcftools (apt) - NOT FOUND
+
+Available system packages:
+
+Conda channels:
+--------------
+❌ conda-forge channel (micromamba) - NOT FOUND
+❌ bioconda channel (micromamba) - NOT FOUND
+
+Available channels:
+
+Conda packages in bioconda:
+--------------------------
+✅ salmon (bioconda)
+✅ fastqc (bioconda)
+✅ multiqc (bioconda)
+✅ fastp (bioconda)
+✅ nextflow (bioconda)
+✅ sra-tools (bioconda)
+✅ entrez-direct (bioconda)
+
+Available conda package versions:
+Getting repodata from channels...
+
+bioconda/noarch                                             Using cache
+bioconda/osx-arm64                                          Using cache
+conda-forge/noarch                                          Using cache
+Getting repodata from channels...
+
+bioconda/noarch                                             Using cache
+bioconda/osx-arm64                                          Using cache
+conda-forge/noarch                                          Using cache
+Getting repodata from channels...
+
+bioconda/noarch                                             Using cache
+bioconda/osx-arm64                                          Using cache
+conda-forge/noarch                                          Using cache
+
+Bioconductor packages:
+---------------------
+✅ bioconductor-deseq2 (bioconda)
+✅ bioconductor-tximport (bioconda)
+✅ bioconductor-sva (bioconda)
+✅ bioconductor-biomart (bioconda)
+
+Available Bioconductor versions:
+Getting repodata from channels...
+
+bioconda/noarch                                             Using cache
+bioconda/osx-arm64                                          Using cache
+conda-forge/noarch                                          Using cache
+
+R packages in CRAN:
+------------------
+✅ tidyverse (CRAN)
+✅ data.table (CRAN)
+✅ metafor (CRAN)
+✅ here (CRAN)
+
+Available R package versions:
+           Package      Version 
+tidyverse  "tidyverse"  "2.0.0" 
+data.table "data.table" "1.17.6"
+metafor    "metafor"    "4.8-0" 
+here       "here"       "1.0.1" 

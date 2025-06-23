@@ -1,0 +1,52 @@
+# Git
+.git
+.gitignore
+
+# Data directories (too large for build context)
+data/raw/
+data/processed/
+data/sra/
+results/
+output/
+
+# Logs
+logs/
+*.log
+
+# Temporary files
+test_output/
+*.tmp
+*.temp
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+
+# R
+.Rhistory
+.RData
+.Ruserdata
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore 

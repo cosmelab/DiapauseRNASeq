@@ -1,0 +1,111 @@
+# RNA-seq Analysis .gitignore
+
+# Large data files
+data/raw/**
+data/sra/**
+data/processed/*.bam
+data/processed/*.sam
+*.fastq
+*.fastq.gz
+*.fasta
+*.fa
+*.fq
+*.fq.gz
+
+# Reference files (large)
+data/references/*.fa
+data/references/*.fasta
+data/references/*.gtf
+data/references/*.gff
+data/references/salmon_index/
+data/references/kallisto_index/
+data/references/bowtie2_index/
+
+# Manuscripts and reference text files (only in metadata)
+# Keep important documentation and analysis files
+!README.md
+!*.md
+!*.Rmd
+
+# Large manuscript files in metadata (exclude)
+data/metadata/Huang_et_al_2015.txt
+data/metadata/Poelchau_et_al_2013*.txt
+data/metadata/*.pdf
+
+# Analysis outputs (keep summaries but not large files)
+output/quantification/*.sf
+output/quantification/*.tsv
+output/qc/*.zip
+output/qc/*.html
+logs/*.log
+logs/*.out
+logs/*.err
+results/
+output/
+*.xlsx
+custom.config
+
+# R specific
+.Rhistory
+.RData
+.Ruserdata
+*.Rproj.user/
+.Rproj.user/
+*.log
+
+# Python specific
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# System files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Docker
+.docker/
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# IDE files
+.vscode/settings.json
+.idea/
+
+# Conda environments
+*.conda
+*.env
+
+# SRA cache
+~/.ncbi/
+
+# MultiQC
+multiqc_data/
+
+# Keep these files (important results)
+!output/figures/
+!output/tables/
+!data/metadata/
+!scripts/
+!*.md
+!*.Rmd
