@@ -199,4 +199,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ---
 
 **Maintainer**: [cosmelab](https://github.com/cosmelab)  
-**Last Updated**: December 2024 
+**Last Updated**: December 2024 # Trigger workflow
