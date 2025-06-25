@@ -1,10 +1,31 @@
-# Diapause RNA-seq Analysis Environment
+# Diapause RNA-seq Analysis Project
 
-A comprehensive Docker-based environment for RNA-seq analysis of diapause studies, featuring differential expression analysis, quality control, and visualization tools.
+A comprehensive RNA-seq analysis pipeline for validating GWAS candidate genes in *Aedes albopictus* diapause regulation across multiple life stages and experimental conditions.
 
-## 🚀 Quick Start
+## 🎯 **Project Overview**
 
-### Using Docker Compose (Recommended)
+### Research Goal
+
+Validate 34 GWAS-identified candidate genes through differential expression analysis across three independent RNA-seq datasets representing different life stages of diapause regulation.
+
+### Datasets
+
+- **PRJNA268379**: Adult females (photoperiod × blood meal factorial design)
+- **PRJNA158021**: Embryos (diapause preparation time course)
+- **PRJNA187045**: Pharate larvae (diapause vs quiescence comparison)
+
+### Key Features
+
+- **Cross-platform integration**: HiSeq2000 and GAIIx platforms
+- **Multi-stage analysis**: Adult, embryo, and pharate larval stages
+- **Batch correction**: ComBat-seq for platform effects
+- **Meta-analysis**: Fixed-effects combination across datasets
+- **Candidate gene focus**: Prioritized analysis of 34 GWAS genes
+
+## 🚀 **Quick Start**
+
+### Using Docker (Recommended)
+
 ```bash
 # Clone the repository
 git clone https://github.com/cosmelab/DiapauseRNASeq.git
@@ -18,6 +39,7 @@ docker-compose up -d
 ```
 
 ### Using Docker directly
+
 ```bash
 # Build the image
 docker build -t diapause-rnaseq .
@@ -26,125 +48,105 @@ docker build -t diapause-rnaseq .
 docker run -it -p 8888:8888 -v $(pwd):/proj diapause-rnaseq
 ```
 
-## 🐳 Docker Image
+## 📚 **Documentation**
 
-The environment is available as a Docker image:
-```bash
-docker pull cosmelab/diapause-rnaseq:latest
-```
+### Core Documentation
 
-## 📋 Features
+- **[PROJECT_RULES.md](PROJECT_RULES.md)**: Analysis strategy, statistical models, and project rules
+- **[WORKFLOW.md](WORKFLOW.md)**: Step-by-step pipeline instructions
+- **[USER_RULES.md](USER_RULES.md)**: AI assistant guidelines and transparency rules
 
-### Bioinformatics Tools
-- **RNA-seq Analysis**: STAR, Salmon, DESeq2
-- **Quality Control**: FastQC, MultiQC, TrimGalore
-- **Variant Calling**: bcftools, samtools, bedtools
-- **Data Processing**: Python, R, Bash scripting
+### Additional Resources
 
-### Development Environment
-- **Shell**: Zsh with Oh My Zsh and Powerlevel10k
-- **Package Managers**: micromamba, pip, R
-- **IDE Support**: Jupyter Lab, VS Code integration
-- **Version Control**: Git with enhanced tooling
+- **[RNAseq_Analysis_Best_Practices.md](RNAseq_Analysis_Best_Practices.md)**: Best practices for RNA-seq analysis
+- **[RNAseq_Publication_Plan.md](RNAseq_Publication_Plan.md)**: Publication strategy and figure planning
+- **[setup_guide.md](setup_guide.md)**: Environment setup instructions
+- **[hpcc_nfcore_install.md](hpcc_nfcore_install.md)**: HPC configuration guide
 
-### Visualization & Analysis
-- **Python**: matplotlib, seaborn, plotnine, bokeh
-- **R**: ggplot2, pheatmap, EnhancedVolcano
-- **Statistics**: DESeq2, tximport, metafor
-
-## 📁 Project Structure
+## 🏗️ **Project Structure**
 
 ```
 DiapauseRNASeq/
 ├── data/
-│   ├── raw/           # Raw sequencing data
-│   ├── metadata/      # Sample information
-│   └── references/    # Genome references
+│   ├── raw/           # FASTQ files by dataset (PRJNA*)
+│   ├── metadata/      # Sample information and candidate genes
+│   └── references/    # Genome and annotation files
+├── results/
+│   ├── organized/     # Organized output from HPC
+│   └── analysis/      # Local analysis results
 ├── scripts/
-│   ├── differential_expression/  # DE analysis scripts
-│   └── download/      # Data download utilities
-├── output/            # Analysis results
-├── logs/              # Log files
+│   ├── analysis/      # Analysis scripts
+│   ├── differential_expression/  # DESeq2 analysis scripts
+│   ├── download/      # Data download utilities
+│   └── visualization/ # Plotting scripts
+├── nf-core/
+│   └── configs/       # HPC configuration files
 ├── Dockerfile         # Container definition
 ├── docker-compose.yml # Multi-container setup
 └── setup.sh          # Environment setup script
 ```
 
-## 🔧 Configuration
+## 🔬 **Analysis Pipeline**
 
-### Environment Variables
-- `R_LIBS_USER`: R package installation directory
-- `LD_LIBRARY_PATH`: Library path for compiled tools
-- `JUPYTER_CONFIG_DIR`: Jupyter configuration location
+### 1. Data Acquisition
 
-### Volume Mounts
-- `./:/proj`: Project directory
-- `rnaseq-data:/proj/data/raw`: Persistent data storage
-- `sra-cache:/proj/data/sra`: SRA download cache
-
-## 📊 Analysis Workflows
-
-### 1. Data Download
 ```bash
-# Download SRA data
-python scripts/sra_download.py --dataset PRJNA158021 --output-dir data
+# Download SRA datasets
+python scripts/sra_download.py --accession PRJNA268379 --output data/raw/PRJNA268379
+python scripts/sra_download.py --accession PRJNA158021 --output data/raw/PRJNA158021
+python scripts/sra_download.py --accession PRJNA187045 --output data/raw/PRJNA187045
 ```
 
-### 2. Quality Control
-```bash
-# Run FastQC
-fastqc data/raw/*.fastq.gz -o output/qc/
+### 2. HPC Processing
 
-# Generate MultiQC report
-multiqc output/qc/ -o output/qc/
+```bash
+# Run nf-core/rnaseq with Salmon quantification
+nextflow run nf-core/rnaseq -profile hpc_batch --aligner salmon
 ```
 
 ### 3. Differential Expression
+
 ```bash
-# Run DESeq2 analysis
-Rscript scripts/differential_expression/de_analysis_PRJNA158021.R
+# Run DESeq2 analysis for each dataset
+Rscript scripts/differential_expression/PRJNA268379_adult_females_Angela_DESeq.R
+Rscript scripts/differential_expression/PRJNA158021_embryos_Mackenzie_DESeq.R
+Rscript scripts/differential_expression/PRJNA187045_pharate_larvae_Sarah_DESeq.R
 ```
 
-## 🛠️ Development
+### 4. Cross-Platform Integration
 
-### Adding New Tools
-1. Update `Dockerfile` with new packages
-2. Rebuild the image: `docker-compose build`
-3. Test the new tools in the container
+```r
+# Apply ComBat-seq batch correction
+tpm_corrected <- ComBat_seq(tpm_combined, batch = platform, group = diapause_status)
 
-### Custom Scripts
-- Place analysis scripts in `scripts/`
-- Use relative paths from `/proj` working directory
-- Follow the existing naming conventions
+# Perform meta-analysis
+meta_results <- lapply(candidate_genes, combine_effects)
+```
 
-## 🔍 Quality Control
+## 🐳 **Docker Environment**
 
-### Pre-processing
-- Adapter trimming with TrimGalore
-- Quality filtering
-- Read length distribution analysis
+### Available Tools
 
-### Post-alignment
-- Mapping statistics
-- Coverage analysis
-- Duplicate detection
+- **RNA-seq Analysis**: Salmon, DESeq2, tximport
+- **Quality Control**: FastQC, MultiQC
+- **Statistics**: R with DESeq2, sva, metafor
+- **Data Processing**: Python, Bash scripting
+- **Development**: Jupyter Lab, VS Code integration
 
-## 📈 Visualization
+### Docker Image
 
-### Built-in Plots
-- PCA plots for sample relationships
-- Volcano plots for differential expression
-- Heatmaps for gene expression patterns
-- Quality control summaries
+```bash
+# Pull from Docker Hub
+docker pull cosmelab/diapause-rnaseq:latest
 
-### Custom Visualizations
-- Use Python plotting libraries (matplotlib, seaborn)
-- R-based plots with ggplot2
-- Interactive plots with bokeh
+# Multi-architecture support (amd64, arm64)
+docker pull cosmelab/diapause-rnaseq:latest
+```
 
-## 🚀 HPC Deployment
+## 🖥️ **HPC Deployment**
 
 ### Singularity/Apptainer
+
 ```bash
 # Convert Docker image to Singularity
 singularity pull docker://cosmelab/diapause-rnaseq:latest
@@ -154,18 +156,57 @@ singularity exec diapause-rnaseq.sif bash
 ```
 
 ### SLURM Integration
+
 - Use `nf-core/configs/hpc_batch.conf` for Nextflow
 - Configure resource limits in `custom.config`
 - Submit jobs with appropriate resource requests
 
-## 📚 Documentation
+## 📊 **Expected Results**
 
-- [Analysis Best Practices](RNAseq_Analysis_Best_Practices.md)
-- [Publication Plan](RNAseq_Publication_Plan.md)
-- [Setup Guide](setup_guide.md)
-- [HPC Configuration](hpcc_nfcore_install.md)
+### Key Deliverables
 
-## 🤝 Contributing
+1. **Candidate gene expression matrix** (TPM values across all samples)
+2. **Differential expression results** (log2FC, p-values for each comparison)
+3. **Meta-analysis summary** (combined effects across life stages)
+4. **Gene prioritization ranking** (based on consistency + significance)
+
+### Quality Metrics
+
+- **Alignment rates**: >80% for each dataset
+- **Gene detection**: >10,000 genes per sample
+- **Differential expression**: FDR < 0.05 for candidate genes
+- **Batch correction**: PCA shows reduced platform separation
+
+## 🔍 **Quality Control**
+
+### Pre-processing
+
+- Adapter trimming with TrimGalore
+- Quality filtering
+- Read length distribution analysis
+
+### Post-alignment
+
+- Mapping statistics
+- Coverage analysis
+- Duplicate detection
+
+## 📈 **Visualization**
+
+### Built-in Plots
+
+- PCA plots for sample relationships
+- Volcano plots for differential expression
+- Heatmaps for gene expression patterns
+- Quality control summaries
+
+### Custom Visualizations
+
+- Use Python plotting libraries (matplotlib, seaborn)
+- R-based plots with ggplot2
+- Interactive plots with bokeh
+
+## 🤝 **Contributing**
 
 1. Fork the repository
 2. Create a feature branch
@@ -173,30 +214,32 @@ singularity exec diapause-rnaseq.sif bash
 4. Test thoroughly
 5. Submit a pull request
 
-## 📄 License
+## 📄 **License**
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+## 🙏 **Acknowledgments**
 
 - RNA-seq analysis community
 - Bioconductor project
 - nf-core community
 - Docker and containerization community
 
-## 📞 Support
+## 📞 **Support**
 
 - **Issues**: [GitHub Issues](https://github.com/cosmelab/DiapauseRNASeq/issues)
-- **Documentation**: Check the docs folder
-- **Email**: degopwn@gmail.com
+- **Documentation**: Check the documentation files above
+- **Email**: <degopwn@gmail.com>
 
-## 🔄 Version History
+## 🔄 **Version History**
 
 - **v1.0.0**: Initial release with basic RNA-seq analysis environment
 - **v1.1.0**: Added HPC support and enhanced visualization tools
 - **v1.2.0**: Integrated nf-core pipelines and improved documentation
+- **v1.3.0**: Multi-architecture Docker support and consolidated documentation
 
 ---
 
-**Maintainer**: [cosmelab](https://github.com/cosmelab)  
-**Last Updated**: December 2024 # Trigger workflow
+**Last Updated:** [Current Date]
+**Project:** DiapauseRNASeq Analysis
+**Purpose:** GWAS candidate gene validation through RNA-seq analysis
