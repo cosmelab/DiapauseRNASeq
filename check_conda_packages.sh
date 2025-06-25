@@ -5,6 +5,23 @@ echo "=================================================="
 
 # List of packages we're actually installing
 packages=(
+    # Core Python and tools
+    "python=3.10"
+    "libstdcxx-ng"
+    "starship"
+    "cmake"
+    "make"
+    "gcc"
+    "gxx"
+    "eza"
+    "datamash"
+    
+    # Jupyter environment
+    "jupyter"
+    "jupyterlab"
+    "notebook"
+    "ipykernel"
+    
     # R and Bioconductor packages
     "r-base"
     "bioconductor-deseq2"
@@ -19,6 +36,7 @@ packages=(
     "bedtools"
     "tabix"
     "vcftools"
+    "snakemake"
     
     # Data access tools
     "sra-tools"

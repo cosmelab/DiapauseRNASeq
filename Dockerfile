@@ -26,7 +26,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libcairo2-dev \
     libbz2-dev \
     liblzma-dev \
-    autojump \
     wget \
     software-properties-common \
     dirmngr \
@@ -45,8 +44,6 @@ RUN micromamba install -c conda-forge -c bioconda \
     gxx \
     eza \
     snakemake \
-    graphviz \
-    pygraphviz \
     datamash \
     jupyter \
     jupyterlab \
@@ -77,16 +74,12 @@ ENV LD_LIBRARY_PATH=/opt/conda/lib
 
 # Install ALL Python packages in a single layer
 RUN pip3 install --no-cache-dir \
-    bokeh \
-    altair \
-    holoviews \
     pandas \
     numpy \
     scipy \
     "kiwisolver<1.4.0" \
     matplotlib \
     seaborn \
-    plotnine \
     upsetplot \
     radian \
     pygments \
@@ -99,7 +92,7 @@ RUN pip3 install --no-cache-dir \
     lxml
 
 # Install ALL R packages in a single layer
-RUN R -e "install.packages(c('here', 'data.table', 'metafor', 'tidyverse', 'ggplot2', 'qqman', 'qqplotr', 'reticulate', 'broom', 'readr', 'readxl', 'writexl', 'knitr', 'rmarkdown'), repos='https://cloud.r-project.org/')"
+RUN R -e "install.packages(c('here', 'data.table', 'metafor', 'tidyverse', 'ggplot2', 'qqman', 'qqplotr', 'reticulate', 'broom', 'readxl', 'writexl', 'knitr', 'rmarkdown'), repos='https://cloud.r-project.org/')"
 
 # Install and configure shell environment in a single layer
 RUN git clone https://github.com/ohmyzsh/ohmyzsh.git ~/.oh-my-zsh && \
@@ -107,17 +100,12 @@ RUN git clone https://github.com/ohmyzsh/ohmyzsh.git ~/.oh-my-zsh && \
     git clone https://github.com/zsh-users/zsh-completions.git ~/.oh-my-zsh/custom/plugins/zsh-completions && \
     git clone https://github.com/zsh-users/zsh-autosuggestions.git ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions && \
     git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting && \
-    mkdir -p ~/.fzf && \
-    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && \
-    ~/.fzf/install --all && \
     cp ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc && \
     sed -i 's/ZSH_THEME=".*"/ZSH_THEME="powerlevel10k\/powerlevel10k"/' ~/.zshrc && \
     sed -i 's/plugins=(git)/plugins=(git zsh-completions zsh-autosuggestions zsh-syntax-highlighting)/' ~/.zshrc && \
     echo 'export DISABLE_AUTO_UPDATE="true"' >> ~/.zshrc && \
     echo 'export DISABLE_UPDATE_PROMPT="true"' >> ~/.zshrc && \
     echo 'POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true' >> ~/.zshrc && \
-    echo '[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh' >> ~/.zshrc && \
-    echo 'export FZF_BASE=~/.fzf' >> ~/.zshrc && \
     echo 'if command -v eza > /dev/null; then' >> ~/.zshrc && \
     echo '  alias ls="eza"' >> ~/.zshrc && \
     echo '  alias ll="eza -l"' >> ~/.zshrc && \
