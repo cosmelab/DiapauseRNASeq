@@ -103,8 +103,10 @@ RUN pip3 install --no-cache-dir \
     xmltodict \
     lxml \
     biopython \
-    scikit-learn \
-    "snakemake>=8.0,<9.0"
+    scikit-learn
+
+# Install snakemake separately to avoid dependency conflicts
+RUN pip3 install --no-cache-dir "snakemake>=8.0,<9.0"
 
 
 
