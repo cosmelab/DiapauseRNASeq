@@ -1,4 +1,4 @@
-FROM mambaorg/micromamba:1.6.0
+FROM mambaorg/micromamba:2.3.0
 
 SHELL ["bash", "-lc"]
 USER root
