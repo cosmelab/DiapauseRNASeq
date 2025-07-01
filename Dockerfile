@@ -1,14 +1,14 @@
 FROM debian:stable-slim
 
 ENV MAMBA_ROOT_PREFIX=/opt/conda \
-    PATH=/opt/conda/bin:$PATH
+    PATH=/opt/conda/bin:/usr/bin:$PATH
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends curl bzip2 ca-certificates && \
     mkdir -p $MAMBA_ROOT_PREFIX && \
-    curl -Lo /usr/local/bin/micromamba \
-      https://github.com/mamba-org/micromamba/releases/download/1.5.0/micromamba-linux-64 && \
-    chmod +x /usr/local/bin/micromamba && \
+    curl -Ls https://micromamba.snakepit.net/api/micromamba/linux-64/latest \
+      | tar -xvj -C /usr/bin --strip-components=1 bin/micromamba && \
+    chmod +x /usr/bin/micromamba && \
     micromamba create -y -p $MAMBA_ROOT_PREFIX python=3.10 && \
     rm -rf /var/lib/apt/lists/*
 
