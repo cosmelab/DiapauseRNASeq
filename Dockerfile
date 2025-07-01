@@ -53,8 +53,7 @@ RUN micromamba install --channel-priority strict -c conda-forge \
     openjdk \
     -y && micromamba clean --all --yes
 
-# Install snakemake via pip to avoid conda dependency conflicts
-RUN pip3 install --no-cache-dir snakemake
+
 
 # Install Jupyter ecosystem (conda-forge only)
 RUN micromamba install --channel-priority strict -c conda-forge \
@@ -108,7 +107,8 @@ RUN pip3 install --no-cache-dir \
     requests \
     beautifulsoup4 \
     xmltodict \
-    lxml
+    lxml \
+    snakemake
 
 # Install ALL R packages in a single layer
 RUN R -e "install.packages(c('here', 'data.table', 'metafor', 'tidyverse', 'ggplot2', 'qqman', 'qqplotr', 'reticulate', 'broom', 'readxl', 'writexl', 'knitr', 'rmarkdown'), repos='https://cloud.r-project.org/')"
