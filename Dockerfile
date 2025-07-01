@@ -1,14 +1,18 @@
 FROM debian:stable-slim
 
-ENV MAMBA_ROOT_PREFIX=/opt/conda
-RUN apt-get update && apt-get install -y curl bzip2 ca-certificates \
-    && mkdir -p ${MAMBA_ROOT_PREFIX} \
-    && curl -Ls https://micromamba.snakepit.net/api/micromamba/linux-64/latest \
-      | tar -xvj -C /usr/local/bin --strip-components=1 bin/micromamba \
-    && micromamba shell init --shell=bash --prefix=${MAMBA_ROOT_PREFIX} --yes \
-    && rm -rf /var/lib/apt/lists/*
+ENV MAMBA_ROOT_PREFIX=/opt/conda \
+    PATH=/opt/conda/bin:$PATH
 
-SHELL ["bash", "-lc"]
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends curl bzip2 ca-certificates && \
+    mkdir -p $MAMBA_ROOT_PREFIX && \
+    curl -Lo /usr/local/bin/micromamba \
+      https://github.com/mamba-org/micromamba/releases/download/1.5.0/micromamba-linux-64 && \
+    chmod +x /usr/local/bin/micromamba && \
+    micromamba create -y -p $MAMBA_ROOT_PREFIX python=3.10 && \
+    rm -rf /var/lib/apt/lists/*
+
+SHELL ["/bin/bash", "-lc"]
 USER root
 
 # Install system dependencies in a single layer
