@@ -1,7 +1,10 @@
-FROM debian:stable-slim
+FROM mambaorg/micromamba:1.6.0
 
 SHELL ["bash", "-lc"]
 USER root
+
+# Update micromamba and all packages to latest versions
+RUN micromamba update --all -y
 
 # Install micromamba dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -53,7 +56,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     dirmngr \
     lsb-release \
     gnupg2 \
-    && rm -rf /var/lib/apt/lists/*
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install ALL conda packages in a single layer
 RUN micromamba install -c conda-forge -c bioconda \
