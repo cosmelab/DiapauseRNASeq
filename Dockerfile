@@ -53,6 +53,9 @@ RUN micromamba install --channel-priority strict -c conda-forge \
     openjdk \
     -y && micromamba clean --all --yes
 
+# Install snakemake via pip to avoid conda dependency conflicts
+RUN pip3 install --no-cache-dir snakemake
+
 # Install Jupyter ecosystem (conda-forge only)
 RUN micromamba install --channel-priority strict -c conda-forge \
     jupyter \
@@ -71,10 +74,7 @@ RUN micromamba install --channel-priority strict -c conda-forge -c bioconda \
 
 # Note: vcftools removed - may be deprecated or have dependency issues
 
-# Install workflow management (conda-forge)
-RUN micromamba install --channel-priority strict -c conda-forge \
-    snakemake \
-    -y && micromamba clean --all --yes
+
 
 # Install R base and Bioconductor packages (conda-forge + bioconda)
 RUN micromamba install --channel-priority strict -c conda-forge -c bioconda \
