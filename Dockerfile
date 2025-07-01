@@ -51,6 +51,7 @@ RUN micromamba install --channel-priority strict -c conda-forge \
     eza \
     datamash \
     openjdk \
+    pip \
     -y && micromamba clean --all --yes
 
 
@@ -102,10 +103,14 @@ RUN pip3 install --no-cache-dir \
     xmltodict \
     lxml \
     biopython \
-    scikit-learn
+    scikit-learn \
+    "snakemake>=8.0,<9.0"
 
-# Install snakemake separately
-RUN pip3 install --no-cache-dir snakemake
+
+
+
+
+
 
 # Install ALL R packages in a single layer
 RUN R -e "install.packages(c('here', 'data.table', 'metafor', 'tidyverse', 'ggplot2', 'qqman', 'qqplotr', 'reticulate', 'broom', 'readxl', 'writexl', 'knitr', 'rmarkdown'), repos='https://cloud.r-project.org/')"
