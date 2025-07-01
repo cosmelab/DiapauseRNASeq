@@ -90,25 +90,22 @@ RUN micromamba install --channel-priority strict -c conda-forge -c bioconda \
 # Set LD_LIBRARY_PATH to use conda's libstdc++
 ENV LD_LIBRARY_PATH=/opt/conda/lib
 
-# Install ALL Python packages in a single layer
+# Install essential Python packages only
 RUN pip3 install --no-cache-dir \
     pandas \
     numpy \
     scipy \
-    "kiwisolver<1.4.0" \
     matplotlib \
     seaborn \
-    upsetplot \
-    radian \
-    pygments \
-    prompt-toolkit \
-    biopython \
-    scikit-learn \
     requests \
     beautifulsoup4 \
     xmltodict \
     lxml \
-    snakemake
+    biopython \
+    scikit-learn
+
+# Install snakemake separately
+RUN pip3 install --no-cache-dir snakemake
 
 # Install ALL R packages in a single layer
 RUN R -e "install.packages(c('here', 'data.table', 'metafor', 'tidyverse', 'ggplot2', 'qqman', 'qqplotr', 'reticulate', 'broom', 'readxl', 'writexl', 'knitr', 'rmarkdown'), repos='https://cloud.r-project.org/')"
