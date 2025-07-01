@@ -105,8 +105,7 @@ RUN pip3 install --no-cache-dir \
     biopython \
     scikit-learn
 
-# Install snakemake separately to avoid dependency conflicts
-RUN pip3 install --no-cache-dir "snakemake>=8.0,<9.0"
+
 
 
 
