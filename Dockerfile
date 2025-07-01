@@ -3,10 +3,12 @@ FROM debian:stable-slim
 SHELL ["bash", "-lc"]
 USER root
 
-# Install micromamba
+# Install micromamba dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     wget \
     ca-certificates \
+    bzip2 \
+    tar \
     && rm -rf /var/lib/apt/lists/*
 
 # Install micromamba
