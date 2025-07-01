@@ -3,10 +3,6 @@ FROM mambaorg/micromamba:1.5.0
 ENV MAMBA_ROOT_PREFIX=/opt/conda \
     PATH=/opt/conda/bin:/usr/bin:$PATH
 
-# Configure channel priority for consistent package resolution
-RUN micromamba config --env --set channel_priority strict
-
-
 SHELL ["bash", "-lc"]
 USER root
 
@@ -44,7 +40,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install core system packages first (conda-forge only)
-RUN micromamba install -c conda-forge \
+RUN micromamba install --channel-priority strict -c conda-forge \
     libstdcxx-ng \
     python=3.10 \
     starship \
@@ -58,7 +54,7 @@ RUN micromamba install -c conda-forge \
     -y && micromamba clean --all --yes
 
 # Install Jupyter ecosystem (conda-forge only)
-RUN micromamba install -c conda-forge \
+RUN micromamba install --channel-priority strict -c conda-forge \
     jupyter \
     jupyterlab \
     notebook \
@@ -66,7 +62,7 @@ RUN micromamba install -c conda-forge \
     -y && micromamba clean --all --yes
 
 # Install bioinformatics tools (bioconda)
-RUN micromamba install -c bioconda \
+RUN micromamba install --channel-priority strict -c bioconda \
     bcftools \
     samtools \
     bedtools \
@@ -75,12 +71,12 @@ RUN micromamba install -c bioconda \
     -y && micromamba clean --all --yes
 
 # Install workflow management (conda-forge)
-RUN micromamba install -c conda-forge \
+RUN micromamba install --channel-priority strict -c conda-forge \
     snakemake \
     -y && micromamba clean --all --yes
 
 # Install R base and Bioconductor packages (conda-forge + bioconda)
-RUN micromamba install -c conda-forge -c bioconda \
+RUN micromamba install --channel-priority strict -c conda-forge -c bioconda \
     r-base \
     bioconductor-deseq2 \
     bioconductor-tximport \
