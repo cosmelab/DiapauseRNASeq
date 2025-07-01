@@ -61,14 +61,15 @@ RUN micromamba install --channel-priority strict -c conda-forge \
     ipykernel \
     -y && micromamba clean --all --yes
 
-# Install bioinformatics tools (bioconda)
-RUN micromamba install --channel-priority strict -c bioconda \
+# Install bioinformatics tools (conda-forge + bioconda)
+RUN micromamba install --channel-priority strict -c conda-forge -c bioconda \
     bcftools \
     samtools \
     bedtools \
     tabix \
-    vcftools \
     -y && micromamba clean --all --yes
+
+# Note: vcftools removed - may be deprecated or have dependency issues
 
 # Install workflow management (conda-forge)
 RUN micromamba install --channel-priority strict -c conda-forge \
