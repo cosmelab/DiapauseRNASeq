@@ -70,9 +70,9 @@ RUN micromamba install --channel-priority strict -c conda-forge -c bioconda \
     samtools \
     bedtools \
     tabix \
+    snakemake \
+    mamba \
     -y && micromamba clean --all --yes
-
-# Note: vcftools removed - may be deprecated or have dependency issues
 
 
 
