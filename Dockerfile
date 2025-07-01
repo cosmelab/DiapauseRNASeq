@@ -16,9 +16,14 @@ RUN wget -qO- https://micro.mamba.pm/api/micromamba/linux-64/latest | tar -xvj b
     mv bin/micromamba /usr/local/bin/ && \
     rm -rf bin
 
-# Initialize micromamba
+# Initialize micromamba properly
 RUN micromamba shell init -s bash -p /opt/conda && \
-    echo "conda activate base" >> ~/.bashrc
+    echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
+    echo "conda activate base" >> ~/.bashrc && \
+    echo "export PATH=/opt/conda/bin:$PATH" >> ~/.bashrc
+
+# Source the environment
+SHELL ["/bin/bash", "-c"]
 
 # Install system dependencies in a single layer
 RUN apt-get update && apt-get install -y --no-install-recommends \
