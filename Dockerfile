@@ -1,32 +1,15 @@
-FROM mambaorg/micromamba:2.3.0
+FROM debian:stable-slim
+
+ENV MAMBA_ROOT_PREFIX=/opt/conda
+RUN apt-get update && apt-get install -y curl bzip2 ca-certificates \
+    && mkdir -p ${MAMBA_ROOT_PREFIX} \
+    && curl -Ls https://micromamba.snakepit.net/api/micromamba/linux-64/latest \
+      | tar -xvj -C /usr/local/bin --strip-components=1 bin/micromamba \
+    && micromamba shell init --shell=bash --prefix=${MAMBA_ROOT_PREFIX} --yes \
+    && rm -rf /var/lib/apt/lists/*
 
 SHELL ["bash", "-lc"]
 USER root
-
-# Update micromamba and all packages to latest versions
-RUN micromamba update --all -y
-
-# Install micromamba dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    wget \
-    ca-certificates \
-    bzip2 \
-    tar \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install micromamba
-RUN wget -qO- https://micro.mamba.pm/api/micromamba/linux-64/latest | tar -xvj bin/micromamba && \
-    mv bin/micromamba /usr/local/bin/ && \
-    rm -rf bin
-
-# Initialize micromamba properly
-RUN micromamba shell init -s bash -p /opt/conda && \
-    echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
-    echo "conda activate base" >> ~/.bashrc && \
-    echo "export PATH=/opt/conda/bin:$PATH" >> ~/.bashrc
-
-# Source the environment
-SHELL ["/bin/bash", "-c"]
 
 # Install system dependencies in a single layer
 RUN apt-get update && apt-get install -y --no-install-recommends \
