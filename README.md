@@ -254,3 +254,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 **Last Updated:** [Current Date]
 **Project:** DiapauseRNASeq Analysis
 **Purpose:** GWAS candidate gene validation through RNA-seq analysis
+# Updated to use main branch and latest tags
