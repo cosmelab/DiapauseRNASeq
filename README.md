@@ -1,5 +1,16 @@
 # Diapause RNA-seq Analysis Project
 
+## ⚠️ **IMPORTANT: AI Assistant Rules**
+
+**BEFORE responding to any request, the AI assistant MUST:**
+
+1. Read USER_RULES.md completely
+2. Follow the exact format specified there
+3. Never make changes without permission
+4. Always ask for confirmation before modifications
+
+---
+
 A comprehensive RNA-seq analysis pipeline for validating GWAS candidate genes in *Aedes albopictus* diapause regulation across multiple life stages and experimental conditions.
 
 ## 🎯 **Project Overview**

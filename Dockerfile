@@ -1,7 +1,22 @@
-FROM mambaorg/micromamba:1.5.0
+FROM debian:stable-slim
 
 SHELL ["bash", "-lc"]
 USER root
+
+# Install micromamba
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    wget \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install micromamba
+RUN wget -qO- https://micro.mamba.pm/api/micromamba/linux-64/latest | tar -xvj bin/micromamba && \
+    mv bin/micromamba /usr/local/bin/ && \
+    rm -rf bin
+
+# Initialize micromamba
+RUN micromamba shell init -s bash -p /opt/conda && \
+    echo "conda activate base" >> ~/.bashrc
 
 # Install system dependencies in a single layer
 RUN apt-get update && apt-get install -y --no-install-recommends \

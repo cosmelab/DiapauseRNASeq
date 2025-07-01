@@ -49,4 +49,15 @@ venv/
 # Docker
 Dockerfile
 docker-compose.yml
-.dockerignore 
+.dockerignore
+
+# Personal information and HPC-specific files
+nf-core/configs/hpc_batch.conf
+scripts/transfer_hpc_data.sh
+scripts/sra_ucr.sh
+scripts/hpc_config_local.sh
+scripts/nf-core_test_ucr.sh
+scripts/run_rnaseq.sh
+scripts/install_zsh_hpc.sh
+scripts/install_zsh_macos.sh
+hpcc_nfcore_install.md

@@ -67,6 +67,14 @@
 🗑️ DELETED FILES:
   - oldfile.py: [reason]
 ⚠️ IMPACTS: [Any potential side effects]
+
+🎯 OBJECTIVE: [Describe the original objective, how it was achieved, what changes were made, and how the problem was solved]
+```
+
+**Example:**
+
+```
+🎯 OBJECTIVE: Give my agent clear rules to avoid Cursor's terminal-response hang; I met it with five direct, active-voice directives tied to the bug's causes and work-arounds.
 ```
 
 ## 🔍 **Verification Requirements:**
@@ -83,6 +91,61 @@
 - ✅ **Verify changes work** as intended
 - ✅ **Check no breaking changes** to existing functionality
 - ✅ **Confirm all dependencies** are still satisfied
+
+## 💻 **Terminal Command Execution Rules:**
+
+### **Cursor Terminal Response Fix:**
+
+**Problem:** Cursor's wrapper times out when it sees no output, causing commands to hang and requiring manual intervention.
+
+**Solution:** Use these rules to guarantee output or immediate backgrounding:
+
+### **1. Always Use Background Execution:**
+
+- ✅ **Set `is_background: true`** for ALL terminal commands
+- ✅ **Only use foreground** if user explicitly says "run foreground"
+- ✅ **Assume every command may exit before I notice**
+
+### **2. Add Completion Sentinel:**
+
+- ✅ **Append `&& echo __CURSOR_DONE__`** to all one-liner commands
+- ✅ **End scripts with `echo __CURSOR_DONE__`** for multi-line scripts
+- ✅ **Stop polling as soon as the sentinel prints**
+
+### **3. Pre-sanitize Interactive Commands:**
+
+- ✅ **Add non-interactive flags** to avoid prompts:
+  - `--yes`, `--quiet`, `--no-verify`, `--no-optional-locks`
+  - `-y` for package managers
+  - `--force` when safe to do so
+
+### **4. Batch Related Commands:**
+
+- ✅ **Generate temporary shell scripts** for multiple related commands
+- ✅ **Execute script once** and monitor overall exit status
+- ✅ **Don't run steps individually** when they're related
+
+### **5. Fallback Plan:**
+
+- ✅ **If command stalls after 8s** of idle output, notify user
+- ✅ **Suggest either** (a) manual run or (b) killing the job ID
+- ✅ **Don't wait indefinitely** for command completion
+
+### **Example Implementation:**
+
+```bash
+# Good - Background with sentinel
+python3 -c "print(1+1)" && echo __CURSOR_DONE__
+
+# Good - Non-interactive flags
+git push --quiet && echo __CURSOR_DONE__
+
+# Good - Batched commands
+echo "#!/bin/bash
+command1
+command2
+echo __CURSOR_DONE__" > temp_script.sh && bash temp_script.sh
+```
 
 ## 📚 **Special Rules for This Project:**
 
@@ -107,7 +170,7 @@
 
 ```
 🎯 GOAL: Fix package compatibility issue
-📁 FILES TO MODIFY: 
+📁 FILES TO MODIFY:
   - Dockerfile (lines 45-50)
   - check_conda_packages.sh (lines 15-20)
 🔧 CHANGES NEEDED: Remove unused packages and update package list
@@ -119,6 +182,8 @@
   - Dockerfile: Removed graphviz, pygraphviz (lines 47-48)
   - check_conda_packages.sh: Updated package list (lines 15-20)
 ⚠️ IMPACTS: No breaking changes, all dependencies preserved
+
+🎯 OBJECTIVE: Fix package compatibility issue in Docker environment; I met it by removing unused packages (graphviz, pygraphviz) and updating the package verification script to match the actual Dockerfile contents.
 ```
 
 ### **Bad Response:**
