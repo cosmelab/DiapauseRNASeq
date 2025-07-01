@@ -1,19 +1,17 @@
-FROM debian:stable-slim
+FROM mambaorg/micromamba:1.5.0
 
 ENV MAMBA_ROOT_PREFIX=/opt/conda \
     PATH=/opt/conda/bin:/usr/bin:$PATH
 
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends curl bzip2 ca-certificates && \
-    mkdir -p $MAMBA_ROOT_PREFIX && \
-    curl -Ls https://micromamba.snakepit.net/api/micromamba/linux-64/latest \
-      | tar -xvj -C /usr/bin --strip-components=1 bin/micromamba && \
-    chmod +x /usr/bin/micromamba && \
-    micromamba create -y -p $MAMBA_ROOT_PREFIX python=3.10 && \
-    rm -rf /var/lib/apt/lists/*
+# Configure channel priority for consistent package resolution
+RUN micromamba config --env --set channel_priority strict
 
-SHELL ["/bin/bash", "-lc"]
+
+SHELL ["bash", "-lc"]
 USER root
+
+# Update micromamba and all packages to latest versions
+RUN micromamba update --all -y
 
 # Install system dependencies in a single layer
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -45,8 +43,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     gnupg2 \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install ALL conda packages in a single layer
-RUN micromamba install -c conda-forge -c bioconda \
+# Install core system packages first (conda-forge only)
+RUN micromamba install -c conda-forge \
     libstdcxx-ng \
     python=3.10 \
     starship \
@@ -55,21 +53,33 @@ RUN micromamba install -c conda-forge -c bioconda \
     gcc \
     gxx \
     eza \
-    snakemake \
     datamash \
+    openjdk \
+    -y && micromamba clean --all --yes
+
+# Install Jupyter ecosystem (conda-forge only)
+RUN micromamba install -c conda-forge \
     jupyter \
     jupyterlab \
     notebook \
     ipykernel \
+    -y && micromamba clean --all --yes
+
+# Install bioinformatics tools (bioconda)
+RUN micromamba install -c bioconda \
     bcftools \
     samtools \
     bedtools \
     tabix \
     vcftools \
-    openjdk \
     -y && micromamba clean --all --yes
 
-# Install R and Bioconductor packages in compatible versions
+# Install workflow management (conda-forge)
+RUN micromamba install -c conda-forge \
+    snakemake \
+    -y && micromamba clean --all --yes
+
+# Install R base and Bioconductor packages (conda-forge + bioconda)
 RUN micromamba install -c conda-forge -c bioconda \
     r-base \
     bioconductor-deseq2 \
