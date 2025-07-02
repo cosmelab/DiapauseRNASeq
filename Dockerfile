@@ -48,7 +48,7 @@ RUN micromamba install --channel-priority strict -c conda-forge \
     make \
     gcc \
     gxx \
-    eza \
+    lsd \
     datamash \
     openjdk \
     pip \
@@ -121,20 +121,23 @@ RUN R -e "install.packages(c('here', 'data.table', 'metafor', 'tidyverse', 'ggpl
 # Install and configure shell environment in a single layer
 RUN git clone https://github.com/ohmyzsh/ohmyzsh.git ~/.oh-my-zsh && \
     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/custom/themes/powerlevel10k && \
+    git clone https://github.com/dracula/powerlevel10k.git ~/.oh-my-zsh/custom/themes/powerlevel10k-dracula && \
     git clone https://github.com/zsh-users/zsh-completions.git ~/.oh-my-zsh/custom/plugins/zsh-completions && \
     git clone https://github.com/zsh-users/zsh-autosuggestions.git ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions && \
     git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting && \
     cp ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc && \
-    sed -i 's/ZSH_THEME=".*"/ZSH_THEME="powerlevel10k\/powerlevel10k"/' ~/.zshrc && \
+    sed -i 's/ZSH_THEME=".*"/ZSH_THEME="powerlevel10k-dracula\/powerlevel10k"/' ~/.zshrc && \
     sed -i 's/plugins=(git)/plugins=(git zsh-completions zsh-autosuggestions zsh-syntax-highlighting)/' ~/.zshrc && \
     echo 'export DISABLE_AUTO_UPDATE="true"' >> ~/.zshrc && \
     echo 'export DISABLE_UPDATE_PROMPT="true"' >> ~/.zshrc && \
     echo 'POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true' >> ~/.zshrc && \
-    echo 'if command -v eza > /dev/null; then' >> ~/.zshrc && \
-    echo '  alias ls="eza"' >> ~/.zshrc && \
-    echo '  alias ll="eza -l"' >> ~/.zshrc && \
-    echo '  alias la="eza -la"' >> ~/.zshrc && \
-    echo '  alias lt="eza --tree"' >> ~/.zshrc && \
+    echo 'if command -v lsd > /dev/null; then' >> ~/.zshrc && \
+    echo '  sed -i "/alias ls=/d" ~/.zshrc' >> ~/.zshrc && \
+    echo '  export LS_COLORS="di=1;91:ln=1;92:so=1;93:pi=1;94:ex=1;95:bd=1;96:cd=1;97:su=1;91:sg=1;92:tw=1;93:ow=1;94"' >> ~/.zshrc && \
+    echo '  alias ls="lsd --color=always --header"' >> ~/.zshrc && \
+    echo '  alias ll="lsd -l --color=always --header"' >> ~/.zshrc && \
+    echo '  alias la="lsd -la --color=always --header"' >> ~/.zshrc && \
+    echo '  alias lt="lsd --tree --color=always --header"' >> ~/.zshrc && \
     echo 'fi' >> ~/.zshrc && \
     echo '# Initialize conda' >> ~/.zshrc && \
     echo 'export PATH="/opt/conda/bin:${PATH}"' >> ~/.zshrc && \
