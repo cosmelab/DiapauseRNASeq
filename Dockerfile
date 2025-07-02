@@ -59,6 +59,39 @@ RUN wget https://github.com/lsd-rs/lsd/releases/download/v1.1.5/lsd-v1.1.5-x86_6
     mv lsd-v1.1.5-x86_64-unknown-linux-gnu/lsd /usr/local/bin/ && \
     rm -rf lsd-v1.1.5-*
 
+# Install Ruby and colorls
+RUN micromamba install --channel-priority strict -c conda-forge \
+    ruby \
+    gcc \
+    make \
+    -y && micromamba clean --all --yes
+
+# Set up Ruby gem environment and install colorls
+RUN export GEM_HOME="/opt/conda/share/rubygems" && \
+    export GEM_PATH="/opt/conda/share/rubygems" && \
+    export PATH="/opt/conda/share/rubygems/bin:$PATH" && \
+    gem install colorls
+
+# Create colorls configuration directory and file
+RUN mkdir -p ~/.config/colorls && \
+    echo "unrecognized_file: white" > ~/.config/colorls/dark_colors.yaml && \
+    echo "recognized_file: white" >> ~/.config/colorls/dark_colors.yaml && \
+    echo "executable_file: red" >> ~/.config/colorls/dark_colors.yaml && \
+    echo "dir: blue" >> ~/.config/colorls/dark_colors.yaml && \
+    echo "user: magenta" >> ~/.config/colorls/dark_colors.yaml && \
+    echo "group: cyan" >> ~/.config/colorls/dark_colors.yaml && \
+    echo "date: yellow" >> ~/.config/colorls/dark_colors.yaml && \
+    echo "time: darkgreen" >> ~/.config/colorls/dark_colors.yaml && \
+    echo "file_size: palegreen" >> ~/.config/colorls/dark_colors.yaml && \
+    echo "read: darkgreen" >> ~/.config/colorls/dark_colors.yaml && \
+    echo "write: yellow" >> ~/.config/colorls/dark_colors.yaml && \
+    echo "exec: red" >> ~/.config/colorls/dark_colors.yaml && \
+    echo "no_access: gray" >> ~/.config/colorls/dark_colors.yaml && \
+    echo "image: magenta" >> ~/.config/colorls/dark_colors.yaml && \
+    echo "video: blue" >> ~/.config/colorls/dark_colors.yaml && \
+    echo "music: cyan" >> ~/.config/colorls/dark_colors.yaml && \
+    echo "log: yellow" >> ~/.config/colorls/dark_colors.yaml
+
 
 
 # Install Jupyter ecosystem (conda-forge only)
@@ -141,10 +174,21 @@ RUN git clone https://github.com/ohmyzsh/ohmyzsh.git ~/.oh-my-zsh && \
     echo '  sed -i "/LS_COLORS=/d" ~/.zshrc' >> ~/.zshrc && \
     echo '  export LS_COLORS="di=1;34:ln=1;36:so=1;35:pi=1;94:ex=1;31:bd=1;95:cd=1;96:ur=0;32:uw=0;33:ux=0;31:ue=0;32:gr=0;32:gw=0;33:gx=0;31:tr=0;90:tw=0;93:tx=0;92"' >> ~/.zshrc && \
     echo '  alias ls="lsd --color=always --header"' >> ~/.zshrc && \
-    echo '  alias ll="lsd -l --color=always --header"' >> ~/.zshrc && \
+    echo '  alias ll="colorls --long --almost-all --sort-dirs --git-status"' >> ~/.zshrc && \
     echo '  alias la="lsd -la --color=always --header"' >> ~/.zshrc && \
     echo '  alias lt="lsd --tree --color=always --header"' >> ~/.zshrc && \
     echo 'fi' >> ~/.zshrc && \
+    echo '# Match local colorls environment' >> ~/.zshrc && \
+    echo 'export LS_COLORS="di=1;34:ln=1;36:so=1;35:pi=1;94:ex=1;31:bd=1;95:cd=1;96:ur=0;32:uw=0;33:ux=0;31:ue=0;32:gr=0;32:gw=0;33:gx=0;31:tr=0;90:tw=0;93:tx=0;92"' >> ~/.zshrc && \
+    echo 'export LSCOLORS="Gxfxcxdxbxegedabagacad"' >> ~/.zshrc && \
+    echo 'export TERM="xterm-256color"' >> ~/.zshrc && \
+    echo 'export COLORTERM="truecolor"' >> ~/.zshrc && \
+    echo 'export EZA_COLORS="ur=0:uw=0:ux=0:ue=0:gr=0:gw=0:gx=0:tr=0:tw=0:tx=0:su=0:sf=0:xa=0"' >> ~/.zshrc && \
+    echo 'export COLORFGBG="15;0"' >> ~/.zshrc && \
+    echo '# Ruby gem environment' >> ~/.zshrc && \
+    echo 'export GEM_HOME="/opt/conda/share/rubygems"' >> ~/.zshrc && \
+    echo 'export GEM_PATH="/opt/conda/share/rubygems"' >> ~/.zshrc && \
+    echo 'export PATH="/opt/conda/share/rubygems/bin:$PATH"' >> ~/.zshrc && \
     echo '# Initialize conda' >> ~/.zshrc && \
     echo 'export PATH="/opt/conda/bin:${PATH}"' >> ~/.zshrc && \
     echo 'eval "$(starship init zsh)"' >> ~/.zshrc && \
