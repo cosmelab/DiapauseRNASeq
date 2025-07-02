@@ -169,6 +169,7 @@ RUN git clone https://github.com/ohmyzsh/ohmyzsh.git ~/.oh-my-zsh && \
     echo 'export DISABLE_AUTO_UPDATE="true"' >> ~/.zshrc && \
     echo 'export DISABLE_UPDATE_PROMPT="true"' >> ~/.zshrc && \
     echo 'POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true' >> ~/.zshrc && \
+    sed -i 's/typeset -g POWERLEVEL9K_TIME_BACKGROUND=.*/typeset -g POWERLEVEL9K_TIME_BACKGROUND=magenta/' ~/.p10k.zsh || echo 'typeset -g POWERLEVEL9K_TIME_BACKGROUND=magenta' >> ~/.p10k.zsh && \
     echo 'if command -v lsd > /dev/null; then' >> ~/.zshrc && \
     echo '  sed -i "/alias ls=/d" ~/.zshrc' >> ~/.zshrc && \
     echo '  sed -i "/LS_COLORS=/d" ~/.zshrc' >> ~/.zshrc && \
