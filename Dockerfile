@@ -48,11 +48,16 @@ RUN micromamba install --channel-priority strict -c conda-forge \
     make \
     gcc \
     gxx \
-    lsd \
     datamash \
     openjdk \
     pip \
     -y && micromamba clean --all --yes
+
+# Install lsd manually (not available in conda-forge)
+RUN wget https://github.com/lsd-rs/lsd/releases/download/v1.1.5/lsd-v1.1.5-x86_64-unknown-linux-gnu.tar.gz && \
+    tar -xzf lsd-v1.1.5-x86_64-unknown-linux-gnu.tar.gz && \
+    mv lsd-v1.1.5-x86_64-unknown-linux-gnu/lsd /usr/local/bin/ && \
+    rm -rf lsd-v1.1.5-*
 
 
 
@@ -121,12 +126,12 @@ RUN R -e "install.packages(c('here', 'data.table', 'metafor', 'tidyverse', 'ggpl
 # Install and configure shell environment in a single layer
 RUN git clone https://github.com/ohmyzsh/ohmyzsh.git ~/.oh-my-zsh && \
     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/custom/themes/powerlevel10k && \
-    git clone https://github.com/dracula/powerlevel10k.git ~/.oh-my-zsh/custom/themes/powerlevel10k-dracula && \
+    git clone https://github.com/dracula/zsh.git ~/.oh-my-zsh/themes/dracula && \
     git clone https://github.com/zsh-users/zsh-completions.git ~/.oh-my-zsh/custom/plugins/zsh-completions && \
     git clone https://github.com/zsh-users/zsh-autosuggestions.git ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions && \
     git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting && \
     cp ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc && \
-    sed -i 's/ZSH_THEME=".*"/ZSH_THEME="powerlevel10k-dracula\/powerlevel10k"/' ~/.zshrc && \
+    sed -i 's/ZSH_THEME=".*"/ZSH_THEME="dracula\/dracula"/' ~/.zshrc && \
     sed -i 's/plugins=(git)/plugins=(git zsh-completions zsh-autosuggestions zsh-syntax-highlighting)/' ~/.zshrc && \
     echo 'export DISABLE_AUTO_UPDATE="true"' >> ~/.zshrc && \
     echo 'export DISABLE_UPDATE_PROMPT="true"' >> ~/.zshrc && \
