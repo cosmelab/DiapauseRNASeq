@@ -138,7 +138,8 @@ RUN git clone https://github.com/ohmyzsh/ohmyzsh.git ~/.oh-my-zsh && \
     echo 'POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true' >> ~/.zshrc && \
     echo 'if command -v lsd > /dev/null; then' >> ~/.zshrc && \
     echo '  sed -i "/alias ls=/d" ~/.zshrc' >> ~/.zshrc && \
-    echo '  export LS_COLORS="di=1;91:ln=1;92:so=1;93:pi=1;94:ex=1;95:bd=1;96:cd=1;97:su=1;91:sg=1;92:tw=1;93:ow=1;94"' >> ~/.zshrc && \
+    echo '  sed -i "/LS_COLORS=/d" ~/.zshrc' >> ~/.zshrc && \
+    echo '  export LS_COLORS="di=1;34:ln=1;36:so=1;35:pi=1;94:ex=1;31:bd=1;95:cd=1;96:ur=0;32:uw=0;33:ux=0;31:ue=0;32:gr=0;32:gw=0;33:gx=0;31:tr=0;90:tw=0;93:tx=0;92"' >> ~/.zshrc && \
     echo '  alias ls="lsd --color=always --header"' >> ~/.zshrc && \
     echo '  alias ll="lsd -l --color=always --header"' >> ~/.zshrc && \
     echo '  alias la="lsd -la --color=always --header"' >> ~/.zshrc && \
